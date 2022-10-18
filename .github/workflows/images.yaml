@@ -12,8 +12,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set Env
+      - name: Set RELEASE_VERSION
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Set VERSIONS
+        run: |
+          echo "SCALA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 1)" >> $GITHUB_ENV &&
+          echo "KAFKA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 2)" >> $GITHUB_ENV &&
       - name: Docker build & push
         env:
           PROJECT_VERSION: 1.0.0
@@ -21,8 +25,6 @@ jobs:
           CI_DEPLOY_PASSWORD: ${{ secrets.CR_PAT }}
           CI_REGISTRY: ghcr.io
         run: |
-          echo "SCALA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 1)" >> $GITHUB_ENV &&
-          echo "KAFKA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 2)" >> $GITHUB_ENV &&
           echo ${KAFKA_VERSION} && echo ${SCALA_VERSION}
           # sudo apt update && sudo apt install curl &&
           # chmod +x build-bin/build-sample.sh &&
