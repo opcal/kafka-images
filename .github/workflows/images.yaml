@@ -2,9 +2,10 @@ name: build-kafka-images
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "[0-9]+.[0-9]+-[0-9]+.[0-9]+.[0-9]+"
-
 
 jobs:
   images-build:
@@ -13,19 +14,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set RELEASE_VERSION
+        if: contains('github.ref', 'tags')
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> ${GITHUB_ENV}
       - name: Set VERSIONS
         run: |
-          echo "SCALA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 1)" >> ${GITHUB_ENV} ;\
-          echo "KAFKA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 2)" >> ${GITHUB_ENV}
+          if [ "${RELEASE_VERSION}" == "" ]; then
+            echo "SCALA_VERSION=2.13" >> ${GITHUB_ENV}
+            echo "KAFKA_VERSION=3.0.0" >> ${GITHUB_ENV}
+            echo "RELEASE_VERSION=SNAPSHOT" >> ${GITHUB_ENV}
+          else
+            echo "SCALA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 1)" >> ${GITHUB_ENV}
+            echo "KAFKA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 2)" >> ${GITHUB_ENV}
+          fi
       - name: Docker build & push
         env:
-          PROJECT_VERSION: 1.0.0
           CI_DEPLOY_USER: ${{ secrets.CR_NAME }}
           CI_DEPLOY_PASSWORD: ${{ secrets.CR_PAT }}
           CI_REGISTRY: ghcr.io
         run: |
-          echo ${KAFKA_VERSION} && echo ${SCALA_VERSION}
-          # sudo apt update && sudo apt install curl &&
-          # chmod +x build-bin/build-sample.sh &&
-          # build-bin/build-sample.sh
+          sudo apt update && sudo apt install curl
+          chmod +x build-bin/image-build.sh
+          build-bin/image-build.sh
