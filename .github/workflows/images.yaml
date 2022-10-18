@@ -21,7 +21,9 @@ jobs:
           CI_DEPLOY_PASSWORD: ${{ secrets.CR_PAT }}
           CI_REGISTRY: ghcr.io
         run: |
-          echo ${RELEASE_VERSION} | cut -d '-' -f 1
+          echo "SCALA_VERSION=$(${RELEASE_VERSION} | cut -d '-' -f 1)" >> $GITHUB_ENV &&
+          echo "KAFKA_VERSION=$(${RELEASE_VERSION} | cut -d '-' -f 2)" >> $GITHUB_ENV &&
+          echo ${KAFKA_VERSION} && echo ${SCALA_VERSION}
           # sudo apt update && sudo apt install curl &&
           # chmod +x build-bin/build-sample.sh &&
           # build-bin/build-sample.sh
