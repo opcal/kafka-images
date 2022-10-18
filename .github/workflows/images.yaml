@@ -33,5 +33,6 @@ jobs:
           CI_REGISTRY: ghcr.io
         run: |
           sudo apt update && sudo apt install curl
+          echo ${CI_DEPLOY_PASSWORD} | docker login ${CI_REGISTRY} -u ${CI_DEPLOY_USER} --password-stdin
           chmod +x build-bin/image-build.sh
           build-bin/image-build.sh
