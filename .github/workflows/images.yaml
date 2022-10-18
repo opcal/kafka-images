@@ -20,7 +20,7 @@ jobs:
         run: |
           if [ "${RELEASE_VERSION}" == "" ]; then
             echo "SCALA_VERSION=2.13" >> ${GITHUB_ENV}
-            echo "KAFKA_VERSION=3.0.0" >> ${GITHUB_ENV}
+            echo "KAFKA_VERSION=2.8.2" >> ${GITHUB_ENV}
             echo "RELEASE_VERSION=SNAPSHOT" >> ${GITHUB_ENV}
           else
             echo "SCALA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 1)" >> ${GITHUB_ENV}
