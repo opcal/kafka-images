@@ -12,7 +12,7 @@ docker build \
     --build-arg scala_version=${SCALA_VERSION} \
     --build-arg kafka_version=${KAFKA_VERSION} \
     -t kafka:${SCALA_VERSION}-${KAFKA_VERSION} \
-    -f ${GITHUB_WORKSPACE}/Dockerfile . --no-cache
+    -f ${PROJECT_DIR}/Dockerfile . --no-cache
 docker image tag kafka:${SCALA_VERSION}-${KAFKA_VERSION} ${CI_REGISTRY}/opcal/kafka:${RELEASE_VERSION}
 docker push ${CI_REGISTRY}/opcal/kafka:${RELEASE_VERSION}
 

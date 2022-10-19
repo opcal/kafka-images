@@ -31,6 +31,7 @@ jobs:
           CI_DEPLOY_USER: ${{ secrets.CR_NAME }}
           CI_DEPLOY_PASSWORD: ${{ secrets.CR_PAT }}
           CI_REGISTRY: ghcr.io
+          PROJECT_DIR: ${{ github.workspace }}
         run: |
           sudo apt update && sudo apt install curl
           echo ${CI_DEPLOY_PASSWORD} | docker login ${CI_REGISTRY} -u ${CI_DEPLOY_USER} --password-stdin
