@@ -22,7 +22,7 @@ RUN gpg --verify ${kafka_distro_asc} ${kafka_distro}
 RUN tar -xzf ${kafka_distro}; 
 RUN rm -r kafka_${scala_version}-${kafka_version}/bin/windows
 
-FROM registry.gitlab.com/opcal-project/containers/eclipse-temurin:11-jre
+FROM ghcr.io/opcal/eclipse-temurin:17-jre
 
 ARG scala_version
 ARG kafka_version
