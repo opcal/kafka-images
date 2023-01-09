@@ -24,6 +24,8 @@ RUN rm -r kafka_${scala_version}-${kafka_version}/bin/windows
 
 FROM ghcr.io/opcal/eclipse-temurin:17-jre
 
+LABEL org.opencontainers.image.authors="opcal@outlook.com"
+
 ARG scala_version
 ARG kafka_version
 
