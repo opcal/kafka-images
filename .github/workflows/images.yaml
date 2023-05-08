@@ -16,6 +16,12 @@ jobs:
       - name: Set RELEASE_VERSION
         if: contains(github.ref, 'tags')
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> ${GITHUB_ENV}
+      - name: Login to ghcr
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.CR_NAME }}
+          password: ${{ secrets.CR_PAT }}
       - name: Set VERSIONS
         run: |
           if [ "${RELEASE_VERSION}" == "" ]; then
@@ -28,12 +34,9 @@ jobs:
           fi
       - name: Docker build & push
         env:
-          CI_DEPLOY_USER: ${{ secrets.CR_NAME }}
-          CI_DEPLOY_PASSWORD: ${{ secrets.CR_PAT }}
           CI_REGISTRY: ghcr.io
           PROJECT_DIR: ${{ github.workspace }}
         run: |
           sudo apt update && sudo apt install curl
-          echo ${CI_DEPLOY_PASSWORD} | docker login ${CI_REGISTRY} -u ${CI_DEPLOY_USER} --password-stdin
           chmod +x build-bin/image-build.sh
           build-bin/image-build.sh
