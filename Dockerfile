@@ -8,19 +8,18 @@ ARG kafka_distro_base_url=https://dlcdn.apache.org/kafka
 ENV kafka_distro=kafka_${scala_version}-${kafka_version}.tgz
 ENV kafka_distro_asc=${kafka_distro}.asc
 
-RUN apk add --no-cache gnupg
+RUN apk add --no-cache gnupg curl 
 
 WORKDIR /var/tmp
 
-RUN wget -q ${kafka_distro_base_url}/${kafka_version}/${kafka_distro}
-RUN wget -q ${kafka_distro_base_url}/${kafka_version}/${kafka_distro_asc}
-RUN wget -q ${kafka_distro_base_url}/KEYS
-
-RUN gpg --import KEYS
-RUN gpg --verify ${kafka_distro_asc} ${kafka_distro}
-
-RUN tar -xzf ${kafka_distro}; 
-RUN rm -r kafka_${scala_version}-${kafka_version}/bin/windows
+RUN curl -LO ${kafka_distro_base_url}/${kafka_version}/${kafka_distro} ;\
+    curl -LO ${kafka_distro_base_url}/${kafka_version}/${kafka_distro_asc} ;\
+    curl -LO ${kafka_distro_base_url}/KEYS ;\
+    ls -la ./ ;\
+    gpg --import KEYS ;\
+    gpg --verify ${kafka_distro_asc} ${kafka_distro} ; \
+    tar -xzf ${kafka_distro};  \
+    rm -r kafka_${scala_version}-${kafka_version}/bin/windows
 
 FROM ghcr.io/opcal/eclipse-temurin:17-jre
 
