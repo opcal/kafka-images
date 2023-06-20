@@ -19,7 +19,8 @@ RUN curl -LO ${kafka_distro_base_url}/${kafka_version}/${kafka_distro} ;\
     gpg --import KEYS ;\
     gpg --verify ${kafka_distro_asc} ${kafka_distro} ; \
     tar -xzf ${kafka_distro};  \
-    rm -r kafka_${scala_version}-${kafka_version}/bin/windows
+    rm -r kafka_${scala_version}-${kafka_version}/bin/windows ; \
+    chmod a+x kafka_${scala_version}-${kafka_version}/bin/*.sh
 
 FROM ghcr.io/opcal/eclipse-temurin:17-jre
 
@@ -34,10 +35,8 @@ ENV KAFKA_VERSION=${kafka_version} \
 
 ENV PATH=${PATH}:${KAFKA_HOME}/bin
 
-RUN mkdir -p ${KAFKA_HOME}
+WORKDIR ${KAFKA_HOME}
 
 COPY --from=kafka_dist /var/tmp/kafka_${scala_version}-${kafka_version} ${KAFKA_HOME}
-
-RUN chmod a+x ${KAFKA_HOME}/bin/*.sh
 
 CMD ["kafka-server-start.sh"]
