@@ -12,9 +12,9 @@ RUN apk add --no-cache gnupg curl
 
 WORKDIR /var/tmp
 
-RUN curl -LO ${kafka_distro_base_url}/${kafka_version}/${kafka_distro} ;\
-    curl -LO ${kafka_distro_base_url}/${kafka_version}/${kafka_distro_asc} ;\
-    curl -LO ${kafka_distro_base_url}/KEYS ;\
+RUN curl -sLO ${kafka_distro_base_url}/${kafka_version}/${kafka_distro} ;\
+    curl -sLO ${kafka_distro_base_url}/${kafka_version}/${kafka_distro_asc} ;\
+    curl -sLO ${kafka_distro_base_url}/KEYS ;\
     ls -la ./ ;\
     gpg --import KEYS ;\
     gpg --verify ${kafka_distro_asc} ${kafka_distro} ; \
