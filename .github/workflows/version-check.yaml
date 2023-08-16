@@ -1,0 +1,56 @@
+name: kafka version check and tag
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "20 20 * * 2"
+
+jobs:
+  images-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }}
+      - name: Tools Installation
+        run: |
+          sudo apt update && sudo apt install curl
+          curl -sL https://raw.githubusercontent.com/gissily/properties-tools/main/install.sh | sudo bash
+      - name: Version Checking
+        shell: bash
+        run: |
+          VERSIONS=(
+              $(curl -sL https://dlcdn.apache.org/kafka | grep '\[DIR\]' | cut -d ' ' -f 5 | cut -d '>' -f 2 | cut -d '/' -f 1)
+          )
+          echo ${VERSIONS[@]}
+          
+          IFS=$'\n' sorted=($(sort -r <<<"${VERSIONS[*]}")); unset IFS
+          NEW_KAFKA=${sorted[0]}
+
+          CURRENT_KAFKA=$(props value version.properties KAFKA_VERSION)
+
+          echo "new kafka version is [${NEW_KAFKA}, current kafka version is [${CURRENT_KAFKA}]]"
+
+          if [ ${NEW_KAFKA} != ${CURRENT_KAFKA} ]; then
+            props set version.properties KAFKA_VERSION ${NEW_KAFKA}
+            echo "NEW_RELEASE=true" >> ${GITHUB_ENV}
+            git add .
+            git commit -m "Update KAFKA_VERSION ${NEW_KAFKA}"
+            git push
+          else 
+            echo "NEW_RELEASE=false" >> ${GITHUB_ENV}
+          fi
+
+      - uses: fregante/setup-git-user@v2
+      - name: Release Tag
+        run: |
+          if [ ${NEW_RELEASE} == 'true' ]; then
+            SCALA_VERSION=$(props value version.properties SCALA_VERSION)
+            KAFKA_VERSION=$(props value version.properties KAFKA_VERSION)
+            TAG_NAME="${SCALA_VERSION}-${KAFKA_VERSION}"
+            git tag -a ${TAG_NAME} -m "Release Tag ${RELEASE_VERSION}"
+            git push origin ${TAG_NAME}
+          else 
+            echo "No release tag"
+          fi
