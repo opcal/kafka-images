@@ -26,11 +26,17 @@ jobs:
           registry: ghcr.io
           username: ${{ secrets.CR_NAME }}
           password: ${{ secrets.CR_PAT }}
+      - name: Tools Installation
+        run: |
+          sudo apt update && sudo apt install curl
+          curl -sL https://raw.githubusercontent.com/gissily/properties-tools/main/install.sh | sudo bash
       - name: Set VERSIONS
         run: |
           if [ "${RELEASE_VERSION}" == "" ]; then
-            echo "SCALA_VERSION=2.13" >> ${GITHUB_ENV}
-            echo "KAFKA_VERSION=3.5.1" >> ${GITHUB_ENV}
+            SCALA_VERSION=$(props value version.properties SCALA_VERSION)
+            KAFKA_VERSION=$(props value version.properties KAFKA_VERSION)
+            echo "SCALA_VERSION=${SCALA_VERSION}" >> ${GITHUB_ENV}
+            echo "KAFKA_VERSION=${KAFKA_VERSION}" >> ${GITHUB_ENV}
             echo "RELEASE_VERSION=SNAPSHOT" >> ${GITHUB_ENV}
           else
             echo "SCALA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 1)" >> ${GITHUB_ENV}
@@ -41,6 +47,5 @@ jobs:
           CI_REGISTRY: ghcr.io
           PROJECT_DIR: ${{ github.workspace }}
         run: |
-          sudo apt update && sudo apt install curl
           chmod +x build-bin/image-build.sh
           build-bin/image-build.sh
