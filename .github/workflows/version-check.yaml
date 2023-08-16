@@ -37,7 +37,7 @@ jobs:
             props set version.properties KAFKA_VERSION ${NEW_KAFKA}
             echo "NEW_RELEASE=true" >> ${GITHUB_ENV}
             git add .
-            git commit -m "Update KAFKA_VERSION ${NEW_KAFKA}"
+            git commit -m "Update KAFKA_VERSION [${NEW_KAFKA}]"
             git push
 
             SCALA_VERSION=$(props value version.properties SCALA_VERSION)
