@@ -12,7 +12,7 @@ IMAGE_REPO="${CI_REGISTRY}/opcal/kafka"
 IMAGE_TAGS=("${RELEASE_VERSION}")
 
 if [ ${RELEASE_VERSION} != 'SNAPSHOT' ]; then
-    FULL_MINOR="$(echo ${RELEASE_VERSION} | cut -d '.' -f 1).$(echo ${RELEASE_VERSION} | cut -d '.' -f 2)"
+    FULL_MINOR="$(echo ${RELEASE_VERSION} | cut -d '.' -f 1).$(echo ${RELEASE_VERSION} | cut -d '.' -f 2).$(echo ${RELEASE_VERSION} | cut -d '.' -f 3)"
     IMAGE_TAGS=(${IMAGE_TAGS[@]} "${FULL_MINOR}")
 fi
 
