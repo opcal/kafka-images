@@ -17,6 +17,7 @@ jobs:
         run: |
           sudo apt update && sudo apt install curl
           curl -sL https://raw.githubusercontent.com/gissily/properties-tools/main/install.sh | sudo bash
+      - uses: fregante/setup-git-user@v2
       - name: Version Checking
         shell: bash
         run: |
@@ -38,19 +39,13 @@ jobs:
             git add .
             git commit -m "Update KAFKA_VERSION ${NEW_KAFKA}"
             git push
-          else 
-            echo "NEW_RELEASE=false" >> ${GITHUB_ENV}
-          fi
 
-      - uses: fregante/setup-git-user@v2
-      - name: Release Tag
-        run: |
-          if [ ${NEW_RELEASE} == 'true' ]; then
             SCALA_VERSION=$(props value version.properties SCALA_VERSION)
             KAFKA_VERSION=$(props value version.properties KAFKA_VERSION)
             TAG_NAME="${SCALA_VERSION}-${KAFKA_VERSION}"
             git tag -a ${TAG_NAME} -m "Release Tag ${RELEASE_VERSION}"
             git push origin ${TAG_NAME}
+
           else 
-            echo "No release tag"
+            echo "no kafka version update"
           fi
