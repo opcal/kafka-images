@@ -47,5 +47,5 @@ jobs:
           CI_REGISTRY: ghcr.io
           PROJECT_DIR: ${{ github.workspace }}
         run: |
-          chmod +x build-bin/image-build.sh
-          build-bin/image-build.sh
+          chmod +x .ci/image-build.sh
+          .ci/image-build.sh
