@@ -23,13 +23,12 @@ do
 done
 
 docker buildx build \
+    --platform ${PLATFORM} \
     --build-arg scala_version=${SCALA_VERSION} \
     --build-arg kafka_version=${KAFKA_VERSION} \
     --push \
     ${BUILD_TAGS} \
     -f ${PROJECT_DIR}/Dockerfile . --no-cache
-
-# docker push ${CI_REGISTRY}/opcal/kafka:${RELEASE_VERSION}
 
 echo "build kafka:${SCALA_VERSION}-${KAFKA_VERSION} finished"
 

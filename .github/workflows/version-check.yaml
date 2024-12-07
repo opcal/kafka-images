@@ -48,4 +48,9 @@ jobs:
 
           else 
             echo "no kafka version update"
+            TIMESTAMP=$(date +%y%m%d%H%M)
+            echo "${TIMESTAMP}" >> .github/auto-activity
+            git add .
+            git commit -m "activity ${TIMESTAMP}"
+            git push
           fi

@@ -1,6 +1,7 @@
 name: build-kafka-images
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -37,7 +38,7 @@ jobs:
             KAFKA_VERSION=$(props value version.properties KAFKA_VERSION)
             echo "SCALA_VERSION=${SCALA_VERSION}" >> ${GITHUB_ENV}
             echo "KAFKA_VERSION=${KAFKA_VERSION}" >> ${GITHUB_ENV}
-            echo "RELEASE_VERSION=SNAPSHOT" >> ${GITHUB_ENV}
+            echo "RELEASE_VERSION=${SCALA_VERSION}-${KAFKA_VERSION}" >> ${GITHUB_ENV}
           else
             echo "SCALA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 1)" >> ${GITHUB_ENV}
             echo "KAFKA_VERSION=$(echo ${RELEASE_VERSION} | cut -d '-' -f 2)" >> ${GITHUB_ENV}
@@ -46,6 +47,7 @@ jobs:
         env:
           CI_REGISTRY: ghcr.io
           PROJECT_DIR: ${{ github.workspace }}
+          PLATFORM: linux/amd64,linux/arm64
         run: |
           chmod +x .ci/image-build.sh
           .ci/image-build.sh
