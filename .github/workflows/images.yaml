@@ -2,6 +2,10 @@ name: build-kafka-images
 
 on:
   workflow_dispatch:
+    branches:
+      - "*"
+    tags:
+      - "*"
   push:
     branches:
       - main
