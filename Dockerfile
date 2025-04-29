@@ -27,7 +27,7 @@ RUN curl -sLO ${kafka_distro_base_url}/${kafka_version}/${kafka_distro} ;\
     rm -r kafka_${scala_version}-${kafka_version}/bin/windows ; \
     chmod a+x kafka_${scala_version}-${kafka_version}/bin/*.sh
 
-FROM ghcr.io/opcal/eclipse-temurin:17-jre
+FROM ghcr.io/opcal/eclipse-temurin:21-jre
 
 LABEL org.opencontainers.image.authors="opcal@outlook.com"
 
