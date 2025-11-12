@@ -46,11 +46,4 @@ jobs:
             git tag -a ${TAG_NAME} -m "Release ${TAG_NAME}"
             git push origin ${TAG_NAME}
 
-          else 
-            echo "no kafka version update"
-            TIMESTAMP=$(date +%y%m%d%H%M)
-            echo "${TIMESTAMP}" >> .github/auto-activity
-            git add .
-            git commit -m "activity ${TIMESTAMP}"
-            git push
           fi
