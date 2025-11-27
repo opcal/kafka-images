@@ -13,7 +13,8 @@ IMAGE_TAGS=("${RELEASE_VERSION}" "${KAFKA_VERSION}")
 
 if [ ${RELEASE_VERSION} != 'SNAPSHOT' ]; then
     FULL_MINOR="$(echo ${RELEASE_VERSION} | cut -d '.' -f 1).$(echo ${RELEASE_VERSION} | cut -d '.' -f 2).$(echo ${RELEASE_VERSION} | cut -d '.' -f 3)"
-    IMAGE_TAGS=(${IMAGE_TAGS[@]} "${FULL_MINOR}")
+    MINOR="$(echo ${KAFKA_VERSION} | cut -d '.' -f 1).$(echo ${KAFKA_VERSION} | cut -d '.' -f 2)"
+    IMAGE_TAGS=(${IMAGE_TAGS[@]} "${FULL_MINOR}" "${MINOR}")
 fi
 
 BUILD_TAGS=""
