@@ -15,7 +15,7 @@ jobs:
           token: ${{ secrets.PAT }}
       - name: Tools Installation
         run: |
-          sudo apt update && sudo apt install curl
+          sudo apt update && sudo apt install curl gnupg2
           curl -sL https://raw.githubusercontent.com/gissily/properties-tools/main/install.sh | sudo bash
       - uses: fregante/setup-git-user@v2
       - name: Version Checking
