@@ -1,4 +1,4 @@
-FROM ghcr.io/opcal/ubuntu:noble AS kafka_dist
+FROM ghcr.io/opcal/ubuntu:resolute AS kafka_dist
 
 ARG scala_version
 ARG kafka_version
